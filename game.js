@@ -143,4 +143,89 @@ class Level {
     }
   }
 
+
+  class LevelParser {
+    constructor(not) {
+        this.not = not;
+    }
+
+    actorFromSymbol(char) {
+        if (this.not !== undefined && char !== undefined && char in this.not) {
+            return this.not[char];
+        }
+        return undefined;
+    }
+
+    obstacleFromSymbol(char) {
+        switch (char) {
+            case 'x':
+                return 'wall';
+            case '!':
+                return 'lava';
+            default:
+                return undefined;
+        }
+    }
+
+    createGrid(argument) {
+      return argument.map(line => line.split('')).map(line => line.map(line => this.obstacleFromSymbol(line)));
+    }
+
+    createActors(argument) {
+        let actors = [];
+        for (let i = 0; i < argument.length; i++) {
+            for (let j = 0; j < argument[i].length; j++) {
+                let actor = this.actorFromSymbol(argument[i].charAt(j));
+                if (actor !== undefined && typeof actor === 'function') {
+                    let instance = new actor(new Vector(j, i));
+                    if (instance instanceof Actor) {
+                        actors.push(instance);
+                    }
+                }
+            }
+        }
+        return actors;
+    }
+
+    parse(argument) {
+        return new Level(this.createGrid(argument), this.createActors(argument));
+    }
+}
+
+
+class Fireball extends Actor {
+  constructor(pos = new Vector(0, 0), speed = new Vector(0, 0)) {
+    super(pos, new Vector(1, 1), speed);
+  }
+  get type() {
+    return 'fireball';
+  }
+  getNextPosition(time = 1) {
+    return this.pos.plus(this.speed.times(time));
+  }
+  handleObstacle() {
+    this.speed = this.speed.times(-1);
+  }
+  act(time, level) {
+    const next = this.getNextPosition(time);
+    if (level.obstacleAt(next, this.size)) {
+      this.handleObstacle();
+    } else {
+      this.pos = next
+    }
+  }
+}
+
+
+class HorizontalFireball extends Fireball {
+  constructor(pos) {
+      super(pos, new Vector(2, 0));
+  }
+}
   
+
+class VerticalFireball extends Fireball {
+  constructor(pos = new Vector(0, 0)) {
+    super(pos, new Vector(0, 2));
+  }
+}
