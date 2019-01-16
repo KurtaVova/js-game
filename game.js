@@ -229,3 +229,84 @@ class VerticalFireball extends Fireball {
     super(pos, new Vector(0, 2));
   }
 }
+
+class FireRain extends Fireball {
+  constructor(pos) {
+      super(pos, new Vector(0, 3));
+      this.initialPos = this.pos;
+  }
+
+  handleObstacle() {
+      this.pos = this.initialPos;
+  }
+}
+
+class Coin extends Actor {
+  constructor(pos = new Vector(0, 0)) {
+    super(pos.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
+    this.springSpeed = 8;
+    this.springDist = 0.07;
+    this.spring = Math.random() * Math.PI * 2;
+    this.startPosition = new Vector(this.pos.x, this.pos.y);
+  }
+  
+  get type() {
+    return 'coin';
+  }
+  
+  updateSpring(time = 1) {
+    this.spring += this.springSpeed * time;
+  }
+  
+  getSpringVector() {
+    return new Vector(0, Math.sin(this.spring) * this.springDist);
+  }
+  
+  getNextPosition(time = 1) {
+    this.updateSpring(time);
+    return this.startPosition.plus(this.getSpringVector());
+  }
+  
+  act(time) {
+    this.pos = this.getNextPosition(time);
+  }
+}
+
+class Player extends Actor {
+  constructor(pos = new Vector(0, 0)) {
+    super(pos.plus(new Vector(0, -0.5)), new Vector(0.8, 1.5), new Vector(0, 0));
+  }
+  get type() {
+    return 'player';
+  }
+}
+
+const schemas = [
+  [
+    '         ',
+    '         ',
+    '    =    ',
+    '       o ',
+    '     !xxx',
+    ' @       ',
+    'xxx!     ',
+    '         '
+  ],
+  [
+    '      v  ',
+    '    v    ',
+    '  v      ',
+    '        o',
+    '        x',
+    '@   x    ',
+    'x        ',
+    '         '
+  ]
+];
+const actorDict = {
+  '@': Player,
+  'v': FireRain
+}
+const parser = new LevelParser(actorDict);
+runGame(schemas, parser, DOMDisplay)
+  .then(() => console.log('Вы выиграли приз!'));
