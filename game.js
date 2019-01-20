@@ -284,29 +284,53 @@ class Player extends Actor {
 const schemas = [
   [
     '         ',
+    '   h     ',
     '         ',
-    '    =    ',
-    '       o ',
-    '     !xxx',
-    ' @       ',
-    'xxx!     ',
+    '        o',
+    '@     xxx',
+    '         ',
+    'xxx      ',
     '         '
   ],
   [
-    '      v  ',
-    '    v    ',
-    '  v      ',
+    '   v     ',
+    '         ',
     '        o',
+    '@   o    ',
     '        x',
-    '@   x    ',
+    '    x    ',
     'x        ',
     '         '
+  ],
+   [
+    '            ',
+    '      v     ',
+    '           o',
+    '@       o  x',
+    '    o   x   ',
+    '    x       ',
+    'x           ',
+    '            '
+  ],
+   [
+    ' v           ',
+    '             ',
+    '             ',
+    '@   h    o   ',
+    '        xx   ',
+    '    xx       ',
+    'xx         o ',
+    '           xx'
   ]
 ];
+
 const actorDict = {
-  '@': Player,
-  'v': FireRain
-}
+    '@': Player,
+    'v': FireRain,
+    'o': Coin,
+    'h': HorizontalFireball,
+    '|': VerticalFireball
+};
 const parser = new LevelParser(actorDict);
 runGame(schemas, parser, DOMDisplay)
   .then(() => console.log('Вы выиграли приз!'));
