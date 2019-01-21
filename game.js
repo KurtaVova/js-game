@@ -293,7 +293,7 @@ const schemas = [
     '         '
   ],
   [
-    '   v     ',
+    '   v   v ',
     '         ',
     '        o',
     '@   o    ',
@@ -303,25 +303,15 @@ const schemas = [
     '         '
   ],
    [
+    '          v ',
     '            ',
-    '      v     ',
-    '           o',
+    '       v   o',
     '@       o  x',
     '    o   x   ',
     '    x       ',
     'x           ',
     '            '
   ],
-   [
-    ' v           ',
-    '             ',
-    '             ',
-    '@   h    o   ',
-    '        xx   ',
-    '    xx       ',
-    'xx         o ',
-    '           xx'
-  ]
 ];
 
 const actorDict = {
